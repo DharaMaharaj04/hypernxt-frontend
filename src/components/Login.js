@@ -169,7 +169,7 @@ function buttonStyle(BRAND) {
     width: "100%",
     padding: "12px",
     background: BRAND.primary,
-    color: "#fff",
+    color: "#f9f9f9",
     border: "none",
     borderRadius: "6px",
     cursor: "pointer",
