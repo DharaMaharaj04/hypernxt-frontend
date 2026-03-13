@@ -45,7 +45,7 @@ export default function Signup({ goLogin, goHome }) {
       if (gstFile) formData.append("gstFile", gstFile);
       if (certFile) formData.append("certFile", certFile);
 
-      const res = await fetch("http://localhost:5000/signup", {
+      const res = await fetch("https://hypernxt-backend.onrender.com/signup", {
         method: "POST",
         body: formData,
       });

@@ -21,7 +21,7 @@ export default function Login({ onLogin, goHome }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("http://localhost:5000/login", {
+    const res = await fetch("https://hypernxt-backend.onrender.com/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

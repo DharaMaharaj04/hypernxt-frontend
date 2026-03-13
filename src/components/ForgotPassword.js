@@ -34,7 +34,7 @@ export default function ForgotPassword({ goLogin, goHome }) {
 
     try{
 
-      const res = await fetch("http://localhost:5000/forgot-password",{
+      const res = await fetch("https://hypernxt-backend.onrender.com/forgot-password",{
         method:"POST",
         headers:{
           "Content-Type":"application/json"
@@ -80,7 +80,7 @@ export default function ForgotPassword({ goLogin, goHome }) {
 
     try{
 
-      const res = await fetch("http://localhost:5000/reset-password",{
+      const res = await fetch("https://hypernxt-backend.onrender.com/reset-password",{
         method:"POST",
         headers:{
           "Content-Type":"application/json"
