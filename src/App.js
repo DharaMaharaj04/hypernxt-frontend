@@ -657,9 +657,7 @@ function HyperOne() {
                 Request a demo
               </a>
             </Button>
-            <Button asChild variant="secondary">
-              <a href="#">Download whitepaper</a>
-            </Button>
+            <Button variant="secondary">Download whitepaper</Button>
           </div>
         </motion.div>
         <motion.div {...fade}>
