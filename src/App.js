@@ -1,6 +1,5 @@
 import React from "react";
 import logo from "./assets/images/Hypernext Logo Blue.png";
-import Login from "./components/Login";
 import PortalModal from "./components/PortalModal";
 import datacenterrenewable from "./assets/images/data-center-renewable.png";
 import { Menu, X } from "lucide-react";
@@ -16,12 +15,9 @@ import {
   Globe,
   Sparkles,
   Award,
-  Users,
-  Newspaper,
   MapPin,
   Phone,
   Mail,
-  ArrowRight,
   Server,
   Battery,
   MoveRight,
@@ -410,8 +406,15 @@ function Header({ setPortalOpen }) {
               </a>
             ))}
             <div className="flex flex-col gap-2 mt-3">
-              <Button asChild size="sm">
-                <a href="#contact">Talk to Sales</a>
+              <Button
+                variant="secondary"
+                onClick={() =>
+                  document
+                    .getElementById("contact")
+                    ?.scrollIntoView({ behavior: "smooth" })
+                }
+              >
+                Talk to Sales
               </Button>
               <Button onClick={() => setPortalOpen(true)} size="sm">
                 Launch Portal
