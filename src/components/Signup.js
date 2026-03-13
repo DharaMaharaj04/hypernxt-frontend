@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import logo from "../assets/images/Hypernext Logo Blue.png";
 
 export default function Signup({ goLogin, goHome }) {
+
   const [form, setForm] = useState({
     name: "",
     email: "",
     company: "",
     phone: "",
     services: "",
-    password: "",
+    password: ""
   });
 
   const [gstFile, setGstFile] = useState(null);
@@ -21,7 +22,7 @@ export default function Signup({ goLogin, goHome }) {
     bg: "#F5F9FC",
     text: "#0B1F33",
     muted: "#5B6B7C",
-    border: "#E6EEF5",
+    border: "#E6EEF5"
   };
 
   const handleChange = (e) => {
@@ -29,6 +30,7 @@ export default function Signup({ goLogin, goHome }) {
   };
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     if (loading) return;
@@ -36,6 +38,7 @@ export default function Signup({ goLogin, goHome }) {
     setLoading(true);
 
     try {
+
       const formData = new FormData();
 
       Object.entries(form).forEach(([key, value]) => {
@@ -47,32 +50,39 @@ export default function Signup({ goLogin, goHome }) {
 
       const res = await fetch("https://hypernxt-backend.onrender.com/signup", {
         method: "POST",
-        body: formData,
+        body: formData
       });
-
-      if (!res.ok) {
-        throw new Error("Server returned error");
-      }
 
       const data = await res.json();
 
       if (data.success) {
+
         alert("Vendor application submitted successfully");
 
         goLogin();
+
       } else {
-        alert("Signup failed. Please try again.");
+
+        alert(data.message || "Signup failed");
+
       }
+
     } catch (err) {
+
       console.error("Signup error:", err);
-      alert("Unable to connect to server.");
+      alert("Server error. Please try again.");
+
+    } finally {
+
+      setLoading(false);
+
     }
 
-    setLoading(false);
   };
 
   return (
     <div style={styles.card(BRAND)}>
+
       <div style={styles.logo}>
         <img src={logo} alt="Hypernext" style={{ height: "40px" }} />
       </div>
@@ -80,6 +90,7 @@ export default function Signup({ goLogin, goHome }) {
       <h2 style={styles.title(BRAND)}>Vendor Registration</h2>
 
       <form onSubmit={handleSubmit} style={styles.form}>
+
         <input
           name="name"
           placeholder="Full Name"
@@ -140,12 +151,20 @@ export default function Signup({ goLogin, goHome }) {
 
         <div style={styles.fileBlock}>
           <label>Certificates</label>
-          <input type="file" onChange={(e) => setCertFile(e.target.files[0])} />
+          <input
+            type="file"
+            onChange={(e) => setCertFile(e.target.files[0])}
+          />
         </div>
 
-        <button type="submit" disabled={loading} style={styles.button(BRAND)}>
+        <button
+          type="submit"
+          disabled={loading}
+          style={styles.button(BRAND)}
+        >
           {loading ? "Submitting..." : "Submit Vendor Application"}
         </button>
+
       </form>
 
       <div style={styles.switch(BRAND)}>
@@ -154,27 +173,12 @@ export default function Signup({ goLogin, goHome }) {
           Login
         </span>
       </div>
-      <div
-        style={{
-          marginTop: "15px",
-          textAlign: "center",
-          color: BRAND.muted,
-          fontSize: "14px",
-        }}
-      ></div>
+
     </div>
   );
 }
 
 const styles = {
-  page: (BRAND) => ({
-    minHeight: "100vh",
-    background: BRAND.bg,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: "20px",
-  }),
 
   card: (BRAND) => ({
     width: "380px",
@@ -184,23 +188,23 @@ const styles = {
     padding: "30px",
     borderRadius: "10px",
     border: `1px solid ${BRAND.border}`,
-    boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.05)"
   }),
 
   logo: {
     textAlign: "center",
-    marginBottom: "10px",
+    marginBottom: "10px"
   },
 
   title: (BRAND) => ({
     textAlign: "center",
     color: BRAND.text,
-    marginBottom: "20px",
+    marginBottom: "20px"
   }),
 
   form: {
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column"
   },
 
   input: (BRAND) => ({
@@ -208,7 +212,7 @@ const styles = {
     padding: "12px",
     marginBottom: "12px",
     border: `1px solid ${BRAND.border}`,
-    borderRadius: "6px",
+    borderRadius: "6px"
   }),
 
   textarea: (BRAND) => ({
@@ -217,11 +221,11 @@ const styles = {
     height: "80px",
     marginBottom: "12px",
     border: `1px solid ${BRAND.border}`,
-    borderRadius: "6px",
+    borderRadius: "6px"
   }),
 
   fileBlock: {
-    marginBottom: "12px",
+    marginBottom: "12px"
   },
 
   button: (BRAND) => ({
@@ -233,20 +237,20 @@ const styles = {
     border: "none",
     borderRadius: "6px",
     cursor: "pointer",
-    fontWeight: "600",
+    fontWeight: "600"
   }),
 
   switch: (BRAND) => ({
     marginTop: "15px",
     textAlign: "center",
     color: BRAND.muted,
-    fontSize: "14px",
+    fontSize: "14px"
   }),
 
   link: (BRAND) => ({
     color: BRAND.accent,
     marginLeft: "6px",
     cursor: "pointer",
-    fontWeight: "600",
-  }),
+    fontWeight: "600"
+  })
 };
