@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import logo from "../assets/images/Hypernext Logo Blue.png";
 
-export default function ForgotPassword({ goLogin, goHome }) {
+export default function ForgotPassword({ goLogin }) {
 
   const [email,setEmail] = useState("");
   const [otp,setOtp] = useState("");
   const [password,setPassword] = useState("");
   const [step,setStep] = useState(1);
+
   const [sending,setSending] = useState(false);
   const [loading,setLoading] = useState(false);
 
@@ -19,7 +20,7 @@ export default function ForgotPassword({ goLogin, goHome }) {
     border:"#E6EEF5"
   };
 
-  /* SEND OTP */
+  /* ---------------- SEND OTP ---------------- */
 
   const sendOTP = async () => {
 
@@ -34,15 +35,22 @@ export default function ForgotPassword({ goLogin, goHome }) {
 
     try{
 
-      const res = await fetch("https://hypernxt-backend.onrender.com/forgot-password",{
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json"
-        },
-        body:JSON.stringify({email})
-      });
+      const res = await fetch(
+        "https://hypernxt-backend.onrender.com/forgot-password",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body:JSON.stringify({email})
+        }
+      );
 
       const data = await res.json();
+
+      if(!res.ok){
+        throw new Error(data.message || "Server error");
+      }
 
       if(data.success){
 
@@ -52,14 +60,15 @@ export default function ForgotPassword({ goLogin, goHome }) {
 
       }else{
 
-        alert("Email not found");
+        alert(data.message || "Email not found");
 
       }
 
     }catch(err){
 
-      console.error(err);
-      alert("Server error");
+      console.error("OTP error:",err);
+
+      alert(err.message || "Server error");
 
     }
 
@@ -67,7 +76,7 @@ export default function ForgotPassword({ goLogin, goHome }) {
 
   };
 
-  /* RESET PASSWORD */
+  /* ---------------- RESET PASSWORD ---------------- */
 
   const resetPassword = async () => {
 
@@ -80,36 +89,50 @@ export default function ForgotPassword({ goLogin, goHome }) {
 
     try{
 
-      const res = await fetch("https://hypernxt-backend.onrender.com/reset-password",{
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json"
-        },
-        body:JSON.stringify({
-          email,
-          otp,
-          password
-        })
-      });
+      const res = await fetch(
+        "https://hypernxt-backend.onrender.com/reset-password",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body:JSON.stringify({
+            email,
+            otp,
+            password
+          })
+        }
+      );
 
       const data = await res.json();
+
+      if(!res.ok){
+        throw new Error(data.message || "Server error");
+      }
 
       if(data.success){
 
         alert("Password updated successfully");
 
+        /* reset form */
+
+        setEmail("");
+        setOtp("");
+        setPassword("");
+
         goLogin();
 
       }else{
 
-        alert("Invalid OTP");
+        alert(data.message || "Invalid OTP");
 
       }
 
     }catch(err){
 
-      console.error(err);
-      alert("Server error");
+      console.error("Reset error:",err);
+
+      alert(err.message || "Server error");
 
     }
 
@@ -136,8 +159,6 @@ export default function ForgotPassword({ goLogin, goHome }) {
         boxShadow:"0 10px 30px rgba(0,0,0,0.05)"
       }}>
 
-        {/* Logo */}
-
         <div style={{textAlign:"center",marginBottom:"20px"}}>
           <img src={logo} alt="Hypernext" style={{height:"40px"}}/>
         </div>
@@ -160,7 +181,6 @@ export default function ForgotPassword({ goLogin, goHome }) {
               placeholder="Email address"
               value={email}
               onChange={(e)=>setEmail(e.target.value)}
-              required
               style={inputStyle(BRAND)}
             />
 
@@ -202,11 +222,25 @@ export default function ForgotPassword({ goLogin, goHome }) {
             >
               {loading ? "Updating..." : "Reset Password"}
             </button>
+
+            <div style={{textAlign:"center",marginTop:"10px"}}>
+              <button
+                onClick={sendOTP}
+                disabled={sending}
+                style={{
+                  border:"none",
+                  background:"none",
+                  color:BRAND.accent,
+                  cursor:"pointer"
+                }}
+              >
+                Resend OTP
+              </button>
+            </div>
+
           </>
 
         )}
-
-        {/* Login link */}
 
         <div style={{
           marginTop:"15px",
@@ -231,22 +265,12 @@ export default function ForgotPassword({ goLogin, goHome }) {
 
         </div>
 
-        {/* Back to website */}
-
-        <div style={{
-          marginTop:"10px",
-          textAlign:"center",
-          color:BRAND.muted,
-          fontSize:"14px"
-        }}>
-
-
-        </div>
-
       </div>
 
     </div>
+
   );
+
 }
 
 function inputStyle(BRAND){

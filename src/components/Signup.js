@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import logo from "../assets/images/Hypernext Logo Blue.png";
 
-export default function Signup({ goLogin, goHome }) {
+export default function Signup({ goLogin }) {
 
   const [form, setForm] = useState({
     name: "",
@@ -25,9 +25,38 @@ export default function Signup({ goLogin, goHome }) {
     border: "#E6EEF5"
   };
 
+  /* handle text inputs */
+
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+
+    const { name, value } = e.target;
+
+    setForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+
   };
+
+  /* reset form */
+
+  const resetForm = () => {
+
+    setForm({
+      name: "",
+      email: "",
+      company: "",
+      phone: "",
+      services: "",
+      password: ""
+    });
+
+    setGstFile(null);
+    setCertFile(null);
+
+  };
+
+  /* submit form */
 
   const handleSubmit = async (e) => {
 
@@ -48,16 +77,25 @@ export default function Signup({ goLogin, goHome }) {
       if (gstFile) formData.append("gstFile", gstFile);
       if (certFile) formData.append("certFile", certFile);
 
-      const res = await fetch("https://hypernxt-backend.onrender.com/signup", {
-        method: "POST",
-        body: formData
-      });
+      const res = await fetch(
+        "https://hypernxt-backend.onrender.com/signup",
+        {
+          method: "POST",
+          body: formData
+        }
+      );
 
       const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Signup failed");
+      }
 
       if (data.success) {
 
         alert("Vendor application submitted successfully");
+
+        resetForm();
 
         goLogin();
 
@@ -70,7 +108,8 @@ export default function Signup({ goLogin, goHome }) {
     } catch (err) {
 
       console.error("Signup error:", err);
-      alert("Server error. Please try again.");
+
+      alert(err.message || "Server error");
 
     } finally {
 
@@ -81,6 +120,7 @@ export default function Signup({ goLogin, goHome }) {
   };
 
   return (
+
     <div style={styles.card(BRAND)}>
 
       <div style={styles.logo}>
@@ -94,6 +134,7 @@ export default function Signup({ goLogin, goHome }) {
         <input
           name="name"
           placeholder="Full Name"
+          value={form.name}
           onChange={handleChange}
           required
           style={styles.input(BRAND)}
@@ -102,6 +143,7 @@ export default function Signup({ goLogin, goHome }) {
         <input
           name="company"
           placeholder="Company Name"
+          value={form.company}
           onChange={handleChange}
           required
           style={styles.input(BRAND)}
@@ -110,6 +152,7 @@ export default function Signup({ goLogin, goHome }) {
         <input
           name="phone"
           placeholder="Phone Number"
+          value={form.phone}
           onChange={handleChange}
           style={styles.input(BRAND)}
         />
@@ -117,6 +160,7 @@ export default function Signup({ goLogin, goHome }) {
         <textarea
           name="services"
           placeholder="Services Offered"
+          value={form.services}
           onChange={handleChange}
           required
           style={styles.textarea(BRAND)}
@@ -126,6 +170,7 @@ export default function Signup({ goLogin, goHome }) {
           name="email"
           type="email"
           placeholder="Email address"
+          value={form.email}
           onChange={handleChange}
           required
           style={styles.input(BRAND)}
@@ -135,6 +180,7 @@ export default function Signup({ goLogin, goHome }) {
           name="password"
           type="password"
           placeholder="Password"
+          value={form.password}
           onChange={handleChange}
           required
           style={styles.input(BRAND)}
@@ -175,7 +221,9 @@ export default function Signup({ goLogin, goHome }) {
       </div>
 
     </div>
+
   );
+
 }
 
 const styles = {
@@ -253,4 +301,5 @@ const styles = {
     cursor: "pointer",
     fontWeight: "600"
   })
+
 };
